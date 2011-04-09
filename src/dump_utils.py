@@ -19,5 +19,7 @@ def dump_reader(sql_dump_name):
     pipe.append(r"sed -e 's/^(//'"
                 r"    -e 's/)$//'",
                 '--')
+    pipe.append(r"iconv -cs -f UTF-8 -t UTF-8",
+                '--')
     return csv.reader(pipe.open(sql_dump_name, 'r'),
                       **CSV_OPTIONS)
