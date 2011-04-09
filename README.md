@@ -1,4 +1,4 @@
-Python utilities for reading wikimedia dump files
+Python 3 utilities for reading wikimedia dump files
 =================================================
 
 *    `dump_utils.dump_reader` takes `.sql.gz` MySQL dump,
@@ -6,6 +6,16 @@ Python utilities for reading wikimedia dump files
 
         for page_id, page_ns, page_title, *_ in dump_reader('enwiki-latest-page.sql.gz'):
             print(page_id, '->', page_title)
+
+    `dump_reader` takes extra positional arguments for additional text-level steps
+    (like `"grep \",'pl',\""`) which can speed up the process significantly
+
+    Because wikipedia dumps sometimes contain invalid utf-8, there is extra
+    keyword-only `fix_utf8` argument to `dump_reader`. Set it to true if you
+    have encoding problems
+
+This library is Python 3-only and depends on you having sane linux environment
+(awk, sed, grep, zcat, etc.)
 
 Where to get the dump files?
 ----------------------------

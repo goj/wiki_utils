@@ -8,7 +8,7 @@ CSV_OPTIONS = {'delimiter': ',',
                'escapechar': '\\',
                'quotechar': "'"}
 
-def dump_reader(sql_dump_name):
+def dump_reader(sql_dump_name, *extra_steps, fix_utf8=False):
     pipe = pipes.Template()
     pipe.append(r'zcat $IN', 'f-')
     pipe.append(r'grep INSERT', '--')
@@ -19,7 +19,10 @@ def dump_reader(sql_dump_name):
     pipe.append(r"sed -e 's/^(//'"
                 r"    -e 's/)$//'",
                 '--')
-    pipe.append(r"iconv -cs -f UTF-8 -t UTF-8",
-                '--')
+    if fix_utf8:
+        pipe.append(r"iconv -cs -f UTF-8 -t UTF-8",
+                    '--')
+    for step in extra_steps:
+        pipe.append(step, '--')
     return csv.reader(pipe.open(sql_dump_name, 'r'),
                       **CSV_OPTIONS)
